@@ -244,6 +244,38 @@ h2 { margin: 0; font-family: Georgia, "Songti SC", serif; font-size: 52px; font-
 .focus-view footer p { margin: 0 0 4px; color: white; font-family: Georgia, "Songti SC", serif; font-size: 17px; }
 
 @media (max-width: 760px) {
+  .backdrop { background: #000; }
+  .color-cloud {
+    width: 118vw;
+    height: 118vw;
+    opacity: .72;
+    filter: blur(30px) saturate(1.15);
+    mix-blend-mode: screen;
+    animation: none !important;
+    transition: background 450ms ease;
+    will-change: auto;
+  }
+  .cloud-a { top: -42vw; left: -48vw; transform: none; }
+  .cloud-b { right: -54vw; bottom: -48vw; transform: none; }
+  .cloud-c,
+  .cloud-d,
+  .liquid-film,
+  .pointer-glow,
+  .backdrop-glass::after { display: none; }
+  .backdrop-glass {
+    background:
+      radial-gradient(ellipse 64% 52% at 50% 44%, rgba(0,0,0,.62), rgba(0,0,0,.82) 58%, #000 100%),
+      linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.82));
+  }
+  .experience::after {
+    background: linear-gradient(180deg, rgba(0,0,0,.34), transparent 28%, transparent 66%, rgba(0,0,0,.48));
+  }
+  .glass,
+  .overview,
+  .about-panel,
+  .focus-view {
+    backdrop-filter: none;
+  }
   .interaction-hint { display: none; }
   .site-chrome { top: 16px; left: 16px; right: 16px; }
   .site-chrome nav { gap: 14px; }

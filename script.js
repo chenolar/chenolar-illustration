@@ -119,7 +119,7 @@ let hoveringCard = false;
 const paletteCache = new Map();
 
 function hasGsap() {
-  return window.gsap && !reduceMotion.matches && !coarsePointer.matches;
+  return window.gsap && !reduceMotion.matches;
 }
 
 function prepareGsap() {
@@ -179,8 +179,7 @@ function setCardStyle(card, offset) {
   card.style.pointerEvents = offset === 0 ? "auto" : "none";
   card.classList.toggle("active", offset === 0);
   const image = card.querySelector("img");
-  const preloadRange = mobile ? 0 : 2;
-  if (image && abs <= preloadRange && image.dataset.src && image.getAttribute("src") === emptyImage) {
+  if (image && abs <= 2 && image.dataset.src && image.getAttribute("src") === emptyImage) {
     image.src = image.dataset.src;
   }
   if (offset !== 0) {
@@ -277,10 +276,6 @@ function applyPalette(colors) {
 }
 
 function updateBackdrop() {
-  if (coarsePointer.matches) {
-    applyPalette([[78, 98, 180], [190, 54, 140], [45, 160, 150]]);
-    return;
-  }
   const source = `${imageBasePath}/${works[current][0]}`;
   if (paletteCache.has(source)) return applyPalette(paletteCache.get(source));
   const image = new Image();
@@ -461,7 +456,6 @@ function toggleAbout(force) {
 }
 
 function setPointerTarget(clientX, clientY) {
-  if (coarsePointer.matches) return;
   pointerTarget = { x: clientX, y: clientY };
   if (!experience.classList.contains("hovering-preview")) {
     backdrop.style.setProperty("--pointer-scale", "1");
@@ -499,7 +493,6 @@ function updateCardTilt(event) {
 }
 
 function animatePointerGlow() {
-  if (coarsePointer.matches || reduceMotion.matches) return;
   if (experience.classList.contains("hovering-preview")) {
     requestAnimationFrame(animatePointerGlow);
     return;
@@ -586,4 +579,4 @@ prepareGsap();
 createDeck();
 render();
 replayOpening();
-if (!coarsePointer.matches && !reduceMotion.matches) animatePointerGlow();
+animatePointerGlow();

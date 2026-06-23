@@ -279,8 +279,21 @@ h2 { margin: 0; font-family: Georgia, "Songti SC", serif; font-size: 52px; font-
   .interaction-hint { display: none; }
   .site-chrome { top: 16px; left: 16px; right: 16px; }
   .site-chrome nav { gap: 14px; }
-  .deck { width: 95vw; height: 72vh; }
-  .art-card { width: 56vw; height: 47vh; border-radius: 0; }
+  .stage { display: block; perspective: 1200px; }
+  .deck {
+    position: absolute;
+    top: 2vh;
+    right: -16vw;
+    width: 100vw;
+    height: 64vh;
+  }
+  .art-card {
+    width: 72vw;
+    height: 58vh;
+    border-radius: 0;
+    box-shadow: 0 22px 56px rgba(0,0,0,.42);
+  }
+  .art-card.active { box-shadow: 0 28px 74px rgba(0,0,0,.54); }
   h1 { font-size: 66px; }
   .intro-copy { top: auto; bottom: 19vh; left: 18px; width: 42vw; transform: none; }
   .intro-copy.hidden { transform: translateY(-18px) scale(1.1); }
@@ -293,8 +306,21 @@ h2 { margin: 0; font-family: Georgia, "Songti SC", serif; font-size: 52px; font-
   .title-kind { margin-top: 14px; }
   .scroll-cue { top: auto; bottom: 12vh; left: 18px; gap: 9px; }
   .scroll-cue-arrows { width: 28px; height: 47px; }
-  .side-index { top: 50%; right: 14px; bottom: auto; left: auto; padding: 10px 8px; transform: translateY(-50%); }
-  .side-index i { width: 1px; height: 25px; }
+  .side-index {
+    top: 46%;
+    right: 12px;
+    bottom: auto;
+    left: auto;
+    gap: 7px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    color: rgba(255,255,255,.46);
+    transform: translateY(-50%);
+  }
+  .side-index i { width: 1px; height: 24px; background: rgba(255,255,255,.22); }
   .overview { padding: 28px 18px 44px; }
   .overview-top { margin: 48px auto 34px; padding-bottom: 22px; }
   .chapter-row { grid-template-columns: 46px minmax(0, 1fr) 62px; gap: 15px; min-height: 104px; padding: 24px 0; }

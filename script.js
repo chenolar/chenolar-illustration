@@ -1,31 +1,33 @@
 const works = [
-  ["建筑画板-4 3.png","一只猫1","静谧空间"],
-  ["未命名作品.png","圣诞快乐2022","日常幻想"],
-  ["IMG_0437.jpg","蓝色漫游","角色实验"],
-  ["建筑画板-4 1.png","一只猫2","静谧空间"],
-  ["IMG_0457.jpg","怪奇朋友","角色实验"],
-  ["未命名作品 35 拷贝-chunt.jpg","春光乍泄","海报叙事"],
-  ["未命名作品 2.png","虎","日常幻想"],
-  ["IMG_0442.jpg","圣诞快乐2021","日常幻想"],
-  ["建筑2画板-7-拷贝-6 1.png","一只猫3","静谧空间"],
-  ["IMG_0153.jpg","可口可乐","角色实验"],
-  ["未命名作品 4.png","华丽的冒险","海报叙事"],
-  ["IMG_0441.jpg","在森林聚会","日常幻想"],
-  ["未命名作品 21.jpg","王子复仇记","海报叙事"],
-  ["未命名作品 6.png","美术课","海报叙事"],
-  ["未命名作品 34.png","楚门的世界","海报叙事"],
-  ["未命名作品 1.jpg","疗伤之旅","角色实验"],
-  ["未命名作品 3.png","牛","海报叙事"],
-  ["未命名作品 32.png","蓝色大门","海报叙事"],
-  ["IMG_0433.jpg","2022","日常幻想"],
-  ["IMG_0450.png","万圣夜","角色实验"],
-  ["未命名作品 5.png","给-妳们","海报叙事"],
-  ["未命名作品 30.png","爱与死亡与机器人","海报叙事"],
-  ["未命名作品 31.jpg","怪奇物语","海报叙事"],
-  ["园游会.jpg","园游会","日常幻想"],
-  ["兔.jpg","兔","日常幻想"],
-  ["新增作品-龙.webp","龙","日常幻想"]
+  ["01.jpg","一只猫1","静谧空间"],
+  ["02.jpg","圣诞快乐2022","日常幻想"],
+  ["03.jpg","蓝色漫游","角色实验"],
+  ["04.jpg","一只猫2","静谧空间"],
+  ["05.jpg","怪奇朋友","角色实验"],
+  ["06.jpg","春光乍泄","海报叙事"],
+  ["07.jpg","虎","日常幻想"],
+  ["08.jpg","圣诞快乐2021","日常幻想"],
+  ["09.jpg","一只猫3","静谧空间"],
+  ["10.jpg","可口可乐","角色实验"],
+  ["11.jpg","华丽的冒险","海报叙事"],
+  ["12.jpg","在森林聚会","日常幻想"],
+  ["13.jpg","王子复仇记","海报叙事"],
+  ["14.jpg","美术课","海报叙事"],
+  ["15.jpg","楚门的世界","海报叙事"],
+  ["16.jpg","疗伤之旅","角色实验"],
+  ["17.jpg","牛","海报叙事"],
+  ["18.jpg","蓝色大门","海报叙事"],
+  ["19.jpg","2022","日常幻想"],
+  ["20.jpg","万圣夜","角色实验"],
+  ["21.jpg","给-妳们","海报叙事"],
+  ["22.jpg","爱与死亡与机器人","海报叙事"],
+  ["23.jpg","怪奇物语","海报叙事"],
+  ["24.jpg","园游会","日常幻想"],
+  ["25.jpg","兔","日常幻想"],
+  ["26.webp","龙","日常幻想"]
 ];
+
+const imageBasePath = "作品-web";
 
 const englishTitles = [
   "A Cat 1",
@@ -133,7 +135,7 @@ function createDeck() {
     const release = isPileCard ? pileRank : 7 + (index % 5);
     return `
       <button class="art-card${isPileCard ? " pile-card" : ""}" style="--order:${index};--pile-rank:${pileRank};--release:${release};--pile-x:${jitterX}px;--pile-y:${jitterY}px;--pile-rotation:${rotation}deg" type="button" data-index="${index}" aria-label="放大作品：${title}">
-        <img src="作品/${file}" alt="${title}" draggable="false">
+        <img src="${imageBasePath}/${file}" alt="${title}" draggable="false">
       </button>
     `;
   }).join("");
@@ -146,7 +148,7 @@ function createDeck() {
         <span>${englishTitles[index]}</span>
       </span>
       <span class="chapter-meta">${seriesNames[category]}<br>${String(index + 1).padStart(2, "0")}:${String(works.length).padStart(2, "0")}</span>
-      <span class="chapter-thumb"><img src="作品/${file}" alt=""></span>
+      <span class="chapter-thumb"><img src="${imageBasePath}/${file}" alt=""></span>
     </button>
   `).join("");
 }
@@ -254,13 +256,13 @@ function applyPalette(colors) {
 }
 
 function updateBackdrop() {
-  const source = `作品/${works[current][0]}`;
+  const source = `${imageBasePath}/${works[current][0]}`;
   if (paletteCache.has(source)) return applyPalette(paletteCache.get(source));
   const image = new Image();
   image.onload = () => {
     const colors = extractPalette(image);
     paletteCache.set(source, colors);
-    if (`作品/${works[current][0]}` === source) applyPalette(colors);
+    if (`${imageBasePath}/${works[current][0]}` === source) applyPalette(colors);
   };
   image.src = source;
 }
@@ -376,7 +378,7 @@ function move(step) {
 
 function openFocus() {
   const [file, title, category] = works[current];
-  document.querySelector("#focusImage").src = `作品/${file}`;
+  document.querySelector("#focusImage").src = `${imageBasePath}/${file}`;
   document.querySelector("#focusImage").alt = title;
   document.querySelector("#focusTitle").textContent = title;
   document.querySelector("#focusCategory").textContent = category;
@@ -391,7 +393,7 @@ function closeFocus() {
 
 function showHoverPreview() {
   const [file, title] = works[current];
-  const source = `作品/${file}`;
+  const source = `${imageBasePath}/${file}`;
   const wasOpen = hoverPreview.classList.contains("open");
   if (hoverPreviewImage.getAttribute("src") !== source) {
     hoverPreviewImage.src = source;

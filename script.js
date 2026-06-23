@@ -27,9 +27,9 @@ const works = [
   ["26.webp","龙","日常幻想"]
 ];
 
-const imageBasePath = "作品-web";
+const imageBasePath = "assets/art";
 const emptyImage =
-  "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
 const englishTitles = [
   "A Cat 1",

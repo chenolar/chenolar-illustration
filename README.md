@@ -6,6 +6,6 @@
 - `index.html`
 - `styles.css`
 - `script.js`
-- `作品-web/`
+- `assets/art/`
 
-`作品-web/` 为网页优化后的轻量图片资源。
+`assets/art/` 为网页优化后的轻量图片资源。

@@ -64,7 +64,7 @@ h1 em { font-weight: 400; color: rgba(255,255,255,.75); }
   overflow: hidden;
   border: 0;
   border-radius: 0;
-  background: transparent;
+  background: #050507;
   box-shadow: 0 26px 60px rgba(12,19,28,.3), 0 3px 12px rgba(12,19,28,.2);
   transition: transform 920ms cubic-bezier(.16,.76,.18,1), opacity 650ms ease, filter 650ms ease, box-shadow 450ms ease;
   will-change: transform;
@@ -73,7 +73,9 @@ h1 em { font-weight: 400; color: rgba(255,255,255,.75); }
   --glare-x: 50%;
   --glare-y: 50%;
 }
-.art-card img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.art-card img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none; transition: opacity 260ms ease; }
+.art-card img.is-loaded { opacity: 1; }
+.art-card img.load-error { opacity: 0; }
 .art-card.active { cursor: default; box-shadow: 0 38px 90px rgba(0,0,0,.42), 0 0 70px rgba(120,80,255,.12); }
 .art-card.active:hover { box-shadow: 0 58px 130px rgba(0,0,0,.56), 0 0 110px rgba(255,60,190,.22); }
 .art-card.active::before {
@@ -200,8 +202,9 @@ h2 { margin: 0; font-family: Georgia, "Songti SC", serif; font-size: 52px; font-
 .chapter-title span { display: block; margin-top: 16px; color: rgba(255,255,255,.38); font-family: var(--english-font); font-size: 13px; font-style: italic; }
 .chapter-row:hover .chapter-title span, .chapter-row.current .chapter-title span { color: rgba(255,255,255,.72); }
 .chapter-meta { justify-self: start; color: rgba(255,255,255,.34); font-family: var(--english-font); font-size: 11px; line-height: 2.05; text-transform: uppercase; }
-.chapter-thumb { justify-self: end; width: 78px; aspect-ratio: 3 / 4; overflow: hidden; opacity: .52; filter: saturate(.72) contrast(.94); transition: transform 300ms cubic-bezier(.16,.76,.18,1), opacity 250ms ease, filter 250ms ease, box-shadow 250ms ease; transform-origin: 100% 50%; }
-.chapter-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.chapter-thumb { justify-self: end; width: 78px; aspect-ratio: 3 / 4; overflow: hidden; opacity: .52; background: #050507; filter: saturate(.72) contrast(.94); transition: transform 300ms cubic-bezier(.16,.76,.18,1), opacity 250ms ease, filter 250ms ease, box-shadow 250ms ease; transform-origin: 100% 50%; }
+.chapter-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 220ms ease; }
+.chapter-thumb img.is-loaded { opacity: 1; }
 .chapter-row:hover .chapter-thumb, .chapter-row.current .chapter-thumb { opacity: 1; filter: saturate(1.12) contrast(1.03); transform: translateX(-8px) scale(1.36); box-shadow: 0 28px 80px rgba(0,0,0,.62), 0 0 48px rgba(120,80,255,.22); }
 .overview-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; max-width: 1200px; margin: 0 auto; }
 .thumb { aspect-ratio: 3 / 4; padding: 0; overflow: hidden; border: 2px solid transparent; border-radius: 0; background: rgba(255,255,255,.14); transition: 180ms ease; }

@@ -28,6 +28,7 @@ const works = [
 ];
 
 const imageBasePath = "assets/art";
+const mobileImageBasePath = "assets/art-mobile";
 const emptyImage =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
@@ -118,6 +119,21 @@ let pointerCurrent = { ...pointerTarget };
 let hoveringCard = false;
 const paletteCache = new Map();
 
+function shouldUseMobileImages() {
+  return coarsePointer.matches || window.innerWidth <= 760;
+}
+
+function mobileFileName(file) {
+  return file.replace(/\.[^.]+$/, ".jpg");
+}
+
+function imagePath(file, forceFull = false) {
+  if (!forceFull && shouldUseMobileImages()) {
+    return `${mobileImageBasePath}/${mobileFileName(file)}`;
+  }
+  return `${imageBasePath}/${file}`;
+}
+
 function hasGsap() {
   return window.gsap && !reduceMotion.matches;
 }
@@ -138,7 +154,7 @@ function createDeck() {
     const release = isPileCard ? pileRank : 7 + (index % 5);
     return `
       <button class="art-card${isPileCard ? " pile-card" : ""}" style="--order:${index};--pile-rank:${pileRank};--release:${release};--pile-x:${jitterX}px;--pile-y:${jitterY}px;--pile-rotation:${rotation}deg" type="button" data-index="${index}" aria-label="放大作品：${title}">
-        <img src="${emptyImage}" data-src="${imageBasePath}/${file}" alt="${title}" draggable="false" loading="lazy" decoding="async">
+        <img src="${emptyImage}" data-src="${imagePath(file)}" data-fallback-src="${imageBasePath}/${file}" alt="${title}" draggable="false" loading="lazy" decoding="async">
       </button>
     `;
   }).join("");
@@ -151,7 +167,7 @@ function createDeck() {
         <span>${englishTitles[index]}</span>
       </span>
       <span class="chapter-meta">${seriesNames[category]}<br>${String(index + 1).padStart(2, "0")}:${String(works.length).padStart(2, "0")}</span>
-      <span class="chapter-thumb"><img src="${emptyImage}" data-src="${imageBasePath}/${file}" alt="" loading="lazy" decoding="async"></span>
+      <span class="chapter-thumb"><img src="${emptyImage}" data-src="${imagePath(file)}" data-fallback-src="${imageBasePath}/${file}" alt="" loading="lazy" decoding="async"></span>
     </button>
   `).join("");
 }
@@ -276,13 +292,13 @@ function applyPalette(colors) {
 }
 
 function updateBackdrop() {
-  const source = `${imageBasePath}/${works[current][0]}`;
+  const source = imagePath(works[current][0]);
   if (paletteCache.has(source)) return applyPalette(paletteCache.get(source));
   const image = new Image();
   image.onload = () => {
     const colors = extractPalette(image);
     paletteCache.set(source, colors);
-    if (`${imageBasePath}/${works[current][0]}` === source) applyPalette(colors);
+    if (imagePath(works[current][0]) === source) applyPalette(colors);
   };
   image.src = source;
 }
@@ -398,7 +414,7 @@ function move(step) {
 
 function openFocus() {
   const [file, title, category] = works[current];
-  document.querySelector("#focusImage").src = `${imageBasePath}/${file}`;
+  document.querySelector("#focusImage").src = imagePath(file);
   document.querySelector("#focusImage").alt = title;
   document.querySelector("#focusTitle").textContent = title;
   document.querySelector("#focusCategory").textContent = category;
@@ -414,7 +430,7 @@ function closeFocus() {
 function showHoverPreview() {
   if (coarsePointer.matches) return;
   const [file, title] = works[current];
-  const source = `${imageBasePath}/${file}`;
+  const source = imagePath(file, true);
   const wasOpen = hoverPreview.classList.contains("open");
   if (hoverPreviewImage.getAttribute("src") !== source) {
     hoverPreviewImage.src = source;
@@ -573,6 +589,22 @@ document.addEventListener("pointerup", event => {
     move(distance > 0 ? -1 : 1);
   }
 });
+document.addEventListener("load", event => {
+  if (event.target instanceof HTMLImageElement) {
+    event.target.classList.add("is-loaded");
+    event.target.classList.remove("load-error");
+  }
+}, true);
+document.addEventListener("error", event => {
+  const image = event.target;
+  if (!(image instanceof HTMLImageElement)) return;
+  const fallback = image.dataset.fallbackSrc;
+  if (fallback && image.src !== new URL(fallback, window.location.href).href) {
+    image.src = fallback;
+    return;
+  }
+  image.classList.add("load-error");
+}, true);
 window.addEventListener("resize", render);
 
 prepareGsap();

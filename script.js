@@ -28,6 +28,8 @@ const works = [
 ];
 
 const imageBasePath = "作品-web";
+const emptyImage =
+  "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 
 const englishTitles = [
   "A Cat 1",
@@ -105,6 +107,7 @@ const hoverPreviewImage = document.querySelector("#hoverPreviewImage");
 const caption = document.querySelector("#workCaption");
 const backdrop = document.querySelector(".backdrop");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const coarsePointer = window.matchMedia("(pointer: coarse)");
 let current = 1;
 let startY = 0;
 let wheelLock = false;
@@ -135,7 +138,7 @@ function createDeck() {
     const release = isPileCard ? pileRank : 7 + (index % 5);
     return `
       <button class="art-card${isPileCard ? " pile-card" : ""}" style="--order:${index};--pile-rank:${pileRank};--release:${release};--pile-x:${jitterX}px;--pile-y:${jitterY}px;--pile-rotation:${rotation}deg" type="button" data-index="${index}" aria-label="放大作品：${title}">
-        <img src="${imageBasePath}/${file}" alt="${title}" draggable="false">
+        <img src="${emptyImage}" data-src="${imageBasePath}/${file}" alt="${title}" draggable="false" loading="lazy" decoding="async">
       </button>
     `;
   }).join("");
@@ -148,7 +151,7 @@ function createDeck() {
         <span>${englishTitles[index]}</span>
       </span>
       <span class="chapter-meta">${seriesNames[category]}<br>${String(index + 1).padStart(2, "0")}:${String(works.length).padStart(2, "0")}</span>
-      <span class="chapter-thumb"><img src="${imageBasePath}/${file}" alt=""></span>
+      <span class="chapter-thumb"><img src="${emptyImage}" data-src="${imageBasePath}/${file}" alt="" loading="lazy" decoding="async"></span>
     </button>
   `).join("");
 }
@@ -175,6 +178,10 @@ function setCardStyle(card, offset) {
   card.style.zIndex = String(12 - abs);
   card.style.pointerEvents = offset === 0 ? "auto" : "none";
   card.classList.toggle("active", offset === 0);
+  const image = card.querySelector("img");
+  if (image && abs <= 2 && image.dataset.src && image.getAttribute("src") === emptyImage) {
+    image.src = image.dataset.src;
+  }
   if (offset !== 0) {
     card.style.setProperty("--tilt-x", "0deg");
     card.style.setProperty("--tilt-y", "0deg");
@@ -182,6 +189,19 @@ function setCardStyle(card, offset) {
     card.style.setProperty("--hover-scale", "1");
     card.style.setProperty("--hover-lift", "0px");
   }
+}
+
+function loadOverviewImages() {
+  overview.querySelectorAll(".chapter-thumb img[data-src]").forEach((image, index) => {
+    if (index === current || index < 6) {
+      image.src = image.dataset.src;
+    }
+  });
+}
+
+function loadChapterImage(row) {
+  const image = row?.querySelector(".chapter-thumb img[data-src]");
+  if (image && image.getAttribute("src") === emptyImage) image.src = image.dataset.src;
 }
 
 function cleanColor([r, g, b]) {
@@ -392,6 +412,7 @@ function closeFocus() {
 }
 
 function showHoverPreview() {
+  if (coarsePointer.matches) return;
   const [file, title] = works[current];
   const source = `${imageBasePath}/${file}`;
   const wasOpen = hoverPreview.classList.contains("open");
@@ -422,6 +443,7 @@ function toggleOverview(force) {
   overview.classList.toggle("open", isOpen);
   overview.setAttribute("aria-hidden", String(!isOpen));
   if (isOpen) toggleAbout(false);
+  if (isOpen) loadOverviewImages();
   animateOverview(isOpen);
 }
 
@@ -441,6 +463,7 @@ function setPointerTarget(clientX, clientY) {
 }
 
 function updateCardTilt(event) {
+  if (coarsePointer.matches) return;
   if (experience.classList.contains("opening") || overview.classList.contains("open") || aboutPanel.classList.contains("open") || focusView.classList.contains("open")) {
     hideHoverPreview();
     return;
@@ -499,6 +522,7 @@ document.addEventListener("click", event => {
   if (action === "focus-close" || event.target === focusView) closeFocus();
   if (card) return;
   if (chapterRow) {
+    loadChapterImage(chapterRow);
     finishOpening();
     numberDirection = Number(chapterRow.dataset.index) >= current ? 1 : -1;
     current = Number(chapterRow.dataset.index);
@@ -526,6 +550,8 @@ document.addEventListener("wheel", event => {
 document.addEventListener("pointerdown", event => { startY = event.clientY; });
 document.addEventListener("pointermove", event => {
   setPointerTarget(event.clientX, event.clientY);
+  const chapterRow = event.target.closest(".chapter-row");
+  if (chapterRow) loadChapterImage(chapterRow);
   updateCardTilt(event);
 }, { passive: true });
 document.addEventListener("pointerleave", () => {

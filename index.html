@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>chenolar 插画作品</title>
+  <meta name="description" content="chenolar 插画作品集">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="experience opening" id="experience">
+    <div class="backdrop" aria-hidden="true">
+      <img id="backdropImage" src="" alt="">
+      <div class="color-cloud cloud-a"></div>
+      <div class="color-cloud cloud-b"></div>
+      <div class="color-cloud cloud-c"></div>
+      <div class="color-cloud cloud-d"></div>
+      <div class="liquid-film film-a"></div>
+      <div class="liquid-film film-b"></div>
+      <div class="pointer-glow"></div>
+      <div class="backdrop-glass"></div>
+    </div>
+
+    <header class="site-chrome" aria-label="页面导航">
+      <button type="button" data-action="home">chenolar</button>
+      <nav>
+        <button type="button" data-action="overview">chapters</button>
+        <button type="button" data-action="about">about</button>
+      </nav>
+    </header>
+
+    <section class="stage" aria-live="polite">
+      <div class="deck" id="deck"></div>
+      <div class="work-title-wrap" id="workCaption" aria-live="polite"></div>
+      <div class="scroll-cue" aria-hidden="true">
+        <span class="scroll-cue-arrows"><i>↑</i><i>↓</i></span>
+      </div>
+    </section>
+
+    <aside class="side-index glass" aria-label="当前章节序号">
+      <span class="number-window"><span id="currentNumber">01</span></span>
+      <i></i>
+      <span id="totalNumber">27</span>
+    </aside>
+
+    <p class="interaction-hint">Scroll or drag vertically</p>
+
+    <section class="overview" id="overview" aria-hidden="true">
+      <div class="overview-top">
+        <div>
+          <p class="eyebrow">Illustration chapters</p>
+          <h2>章节目录</h2>
+        </div>
+        <button class="close-button glass" type="button" data-action="overview-close" aria-label="关闭章节目录">×</button>
+      </div>
+      <div class="chapter-list" id="overviewGrid"></div>
+    </section>
+
+    <section class="about-panel" id="aboutPanel" aria-hidden="true">
+      <button class="close-button glass" type="button" data-action="about-close" aria-label="关闭关于">×</button>
+      <div class="about-inner">
+        <p class="eyebrow">myself</p>
+        <h2 class="falling-title" aria-label="表达是人最重要的组成部分。">
+          <span style="--fall-index:0">表</span><span style="--fall-index:1">达</span><span style="--fall-index:2">是</span><span style="--fall-index:3">人</span><span style="--fall-index:4">最</span><span style="--fall-index:5">重</span><span style="--fall-index:6">要</span><span style="--fall-index:7">的</span><span style="--fall-index:8">组</span><span style="--fall-index:9">成</span><span style="--fall-index:10">部</span><span style="--fall-index:11">分</span><span style="--fall-index:12">。</span>
+        </h2>
+        <div class="about-copy">
+          <p>「一期一会打卡插画练习」。拥有表达的欲望是一直要求自己尽力保持的习惯，无论是文字，音乐，画面，表达是更本质的呼吸。</p>
+          <div class="wechat-block">
+            <p class="wechat-label">WeChat</p>
+            <img src="作品/wechat-qr.png" alt="WeChat QR code">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hover-preview" id="hoverPreview" aria-hidden="true">
+      <img id="hoverPreviewImage" src="" alt="">
+    </section>
+
+    <section class="focus-view" id="focusView" aria-hidden="true">
+      <button class="close-button glass" type="button" data-action="focus-close" aria-label="关闭大图">×</button>
+      <img id="focusImage" src="" alt="">
+      <footer class="glass">
+        <div>
+          <p id="focusTitle"></p>
+          <span id="focusCategory"></span>
+        </div>
+        <span>点击关闭 · Esc</span>
+      </footer>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

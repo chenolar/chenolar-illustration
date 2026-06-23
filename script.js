@@ -167,7 +167,7 @@ function setCardStyle(card, offset) {
   const abs = Math.abs(offset);
   const visible = abs <= 4;
   const mobile = window.innerWidth <= 760;
-  const spread = mobile ? 43 : 32;
+  const spread = mobile ? 31 : 32;
   const side = offset % 2 === 0 ? 1 : -1;
   const x = abs === 0 ? 0 : side * abs * (mobile ? 2.1 : 1.35);
   const scale = offset === 0 ? "calc(1 * var(--hover-scale, 1))" : Math.max(.54, .8 - abs * .065);

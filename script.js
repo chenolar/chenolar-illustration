@@ -134,6 +134,17 @@ function imagePath(file, forceFull = false) {
   return `${imageBasePath}/${file}`;
 }
 
+function loadImageElement(image) {
+  if (!image || !image.dataset.src) return;
+  if (image.getAttribute("src") !== image.dataset.src) {
+    image.src = image.dataset.src;
+  }
+  if (image.complete && image.naturalWidth > 0) {
+    image.classList.add("is-loaded");
+    image.classList.remove("load-error");
+  }
+}
+
 function hasGsap() {
   return window.gsap && !reduceMotion.matches;
 }
@@ -195,8 +206,8 @@ function setCardStyle(card, offset) {
   card.style.pointerEvents = offset === 0 ? "auto" : "none";
   card.classList.toggle("active", offset === 0);
   const image = card.querySelector("img");
-  if (image && abs <= 2 && image.dataset.src && image.getAttribute("src") === emptyImage) {
-    image.src = image.dataset.src;
+  if (image && visible) {
+    loadImageElement(image);
   }
   if (offset !== 0) {
     card.style.setProperty("--tilt-x", "0deg");
@@ -210,14 +221,30 @@ function setCardStyle(card, offset) {
 function loadOverviewImages() {
   overview.querySelectorAll(".chapter-thumb img[data-src]").forEach((image, index) => {
     if (index === current || index < 6) {
-      image.src = image.dataset.src;
+      loadImageElement(image);
     }
   });
 }
 
 function loadChapterImage(row) {
   const image = row?.querySelector(".chapter-thumb img[data-src]");
-  if (image && image.getAttribute("src") === emptyImage) image.src = image.dataset.src;
+  loadImageElement(image);
+}
+
+function preloadMobileImages() {
+  if (!shouldUseMobileImages()) return;
+  const warmup = () => {
+    document.querySelectorAll("img[data-src]").forEach(loadImageElement);
+    works.forEach(([file]) => {
+      const image = new Image();
+      image.src = `${mobileImageBasePath}/${mobileFileName(file)}`;
+    });
+  };
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(warmup, { timeout: 1800 });
+  } else {
+    setTimeout(warmup, 700);
+  }
 }
 
 function cleanColor([r, g, b]) {
@@ -600,6 +627,7 @@ document.addEventListener("error", event => {
   if (!(image instanceof HTMLImageElement)) return;
   const fallback = image.dataset.fallbackSrc;
   if (fallback && image.src !== new URL(fallback, window.location.href).href) {
+    image.classList.remove("is-loaded");
     image.src = fallback;
     return;
   }
@@ -611,4 +639,5 @@ prepareGsap();
 createDeck();
 render();
 replayOpening();
+preloadMobileImages();
 animatePointerGlow();
